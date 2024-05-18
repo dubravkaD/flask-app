@@ -77,7 +77,12 @@ def update(id):
 # Uses http method DELETE
 @app.route("/delete/<int:id>", methods=["DELETE"])
 def delete(id):
-    pass
+    with sqlite3.connect("recipe-book.db") as connection:
+        create_table(connection)
+        cursor = connection.cursor()
+        cursor.execute("DELETE from recipes WHERE id=?", (id,))
+        connection.commit()
+        cursor.close()
 
 
 if __name__ == "__main__":
