@@ -28,7 +28,8 @@ def create_table(connection):
 # Uses http method GET
 @app.route("/", methods=["GET"])
 def index():
-    return render_template("index.html")
+    recipes = get()
+    return render_template("index.html", recipes=recipes)
 
 
 # Adds new recipe to table recipes
