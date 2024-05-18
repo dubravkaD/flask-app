@@ -3,6 +3,7 @@ import sqlite3
 
 app = Flask(__name__)
 
+# recipes = []
 
 # Creats table recipes if not exist in db
 # Has fields id, title, category, servings, ingredients, directions
@@ -29,7 +30,7 @@ def create_table(connection):
 @app.route("/", methods=["GET"])
 def index():
     recipes = get()
-    return render_template("index.html", recipes=recipes)
+    return render_template("index.html", recipes=[])
 
 
 # Adds new recipe to table recipes

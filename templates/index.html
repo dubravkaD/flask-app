@@ -4,10 +4,52 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#delete").click(function () {
+          var id = $("#{{recipe[0]}}");
+          $.ajax({
+            type: "DELETE",
+            url: `/delete/${id}`,
+            data: JSON.stringify({ id: id }),
+            success: function (data) {
+              console.log("Successful DELETE" + data);
+            },
+            error: function (error) {
+              console.log(error);
+            }
+          });
+        });
+        $("#submit").click(function () {
+          var name = $("#name").val();
+          var category = $("#category").val();
+          var servings = $("#servings").val();
+          var ingredients = $("#ingredients").val();
+          var directions = $("#directions").val();
+          $.ajax({
+            type: "POSt",
+            url: "/add",
+            data: JSON.stringify({
+              name: name,
+              category: category,
+              servings: servings,
+              ingredients: ingredients,
+              directions: directions,
+            }),
+            success: function (data) {
+              console.log("Successful POST" + data);
+            },
+            error: function (error) {
+              console.log(error);
+            }
+          });
+        });
+      });
+    </script>
     <title>Recipe Book</title>
   </head>
   <body>
-    <table>
+    <table id="table">
       <thead>
         <th>Recipe Title</th>
         <th>Category</th>
@@ -18,19 +60,32 @@
       </thead>
       <tbody>
         {% for recipe in recipes%}
-        <tr>
-            <td>{{recipe[1]}}</td>
-            <td>{{recipe[2]}}</td>
-            <td>{{recipe[3]}}</td>
-            <td>{{recipe[4]}}</td>
-            <td>{{recipe[5]}}</td>
-            <td>
-                <button id="edit">Edit</button>
-                <button id="delete">Delete</button>
-            </td>
+        <tr id="{{recipe[0]}}">
+          <td>{{recipe[1]}}</td>
+          <td>{{recipe[2]}}</td>
+          <td>{{recipe[3]}}</td>
+          <td>{{recipe[4]}}</td>
+          <td>{{recipe[5]}}</td>
+          <td>
+            <button id="edit">Edit</button>
+            <button id="delete">Delete</button>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
+
+    <br /><br />
+    <form id="form">
+      Title: <input type="text" name="title" id="title" /><br />
+      Category: <input type="text" name="category" id="category" /><br />
+      Servings:
+      <input type="number" min="1" name="servings" id="servings" /><br />
+      Ingredients:
+      <input type="text" name="ingredients" id="ingredients" /><br />
+      Directions: <input type="text" name="directions" id="directions" /><br />
+      <button type="submit" id="submit">Submit</button>
+      <button type="reset">Reset</button>
+    </form>
   </body>
 </html>
