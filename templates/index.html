@@ -6,21 +6,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
       $(document).ready(function () {
-        $("#delete").click(function () {
-          var id = $("#{{recipe[0]}}");
-          $.ajax({
-            type: "DELETE",
-            url: `/delete/${id}`,
-            data: JSON.stringify({ id: id }),
-            success: function (data) {
-              console.log("Successful DELETE" + data);
-            },
-            error: function (error) {
-              console.log(error);
-            }
-          });
-        });
-        $("#submit").click(function () {
+        $("form").on("submit", function () {
+          event.preventDefault();
           var name = $("#name").val();
           var category = $("#category").val();
           var servings = $("#servings").val();
@@ -41,7 +28,21 @@
             },
             error: function (error) {
               console.log(error);
-            }
+            },
+          });
+        });
+        $(".delete").on("click", function () {
+          var id = $(this).attr("id");
+          $.ajax({
+            type: "DELETE",
+            url: `/delete/${id}`,
+            data: JSON.stringify({ id: id }),
+            success: function (data) {
+              console.log("Successful DELETE" + data);
+            },
+            error: function (error) {
+              console.log(error);
+            },
           });
         });
       });
@@ -60,15 +61,15 @@
       </thead>
       <tbody>
         {% for recipe in recipes%}
-        <tr id="{{recipe[0]}}">
-          <td>{{recipe[1]}}</td>
-          <td>{{recipe[2]}}</td>
-          <td>{{recipe[3]}}</td>
-          <td>{{recipe[4]}}</td>
-          <td>{{recipe[5]}}</td>
+        <tr id="{{recipe.id}}">
+          <td>{{recipe.title}}</td>
+          <td>{{recipe.category}}</td>
+          <td>{{recipe.servings}}</td>
+          <td>{{recipe.ingredients}}</td>
+          <td>{{recipe.directions}}</td>
           <td>
-            <button id="edit">Edit</button>
-            <button id="delete">Delete</button>
+            <button class="edit" id="{{recipe.id}}">Edit</button>
+            <button class="delete" id="{{recipe.id}}">Delete</button>
           </td>
         </tr>
         {% endfor %}
