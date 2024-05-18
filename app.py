@@ -83,6 +83,9 @@ def delete(id):
         cursor.execute("DELETE from recipes WHERE id=?", (id,))
         connection.commit()
         cursor.close()
+        if cursor.rowcount == 0:
+            return jsonify({"message": "Recipe not found"}), 404
+        return jsonify({"message": "Recipe deleted"}), 200
 
 
 if __name__ == "__main__":
