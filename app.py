@@ -56,7 +56,14 @@ def get():
 # Uses http method GET
 @app.route("/get/<int:id>", methods=["GET"])
 def get_recipe(id):
-    pass
+    with sqlite3.connect("recipe-book.db") as conn:
+        create_table(conn)
+        cursor = conn.cursor()
+        query = f"SELECT * FROM recipes WHERE id={int(id)};"
+        cursor.execute(query)
+        recipes = cursor.fetchall()
+        cursor.close()
+        return jsonify({"recipes": recipes})
 
 
 # Updates recipe from table recipes
