@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify
+import sqlite3
 
 app = Flask(__name__)
 
@@ -30,25 +31,44 @@ def index():
     return render_template("index.html")
 
 
-@app.rout("/add", methods=["POST"])
+# Adds new recipe to table recipes
+# Uses http method POST
+@app.route("/add", methods=["POST"])
 def add():
     pass
 
-@app.rout("/get", methods=["GET"])
-def get():
-    pass
 
-@app.rout("/get/<int:id>", methods=["GET"])
+# Gets all recipes from table recipes
+# Uses http method GET
+@app.route("/get", methods=["GET"])
+def get():
+    with sqlite3.connect("recipe-book.db") as conn:
+        create_table(conn)
+        cursor = conn.cursor()
+        query = "SELECT * FROM recipes;"
+        cursor.execute(query)
+        recipes = cursor.fetchall()
+        cursor.close()
+        return jsonify({"recipes": recipes})
+
+
+# Gets recipe by id from table recipes
+# Uses http method GET
+@app.route("/get/<int:id>", methods=["GET"])
 def get_recipe(id):
     pass
 
 
-@app.rout("/update/<int:id>", methods=["PUT"])
+# Updates recipe from table recipes
+# Uses http method PUT
+@app.route("/update/<int:id>", methods=["PUT"])
 def update(id):
     pass
 
 
-@app.rout("/delete/<int:id>", methods=["DELETE"])
+# Deletes recipe by id from table recipes
+# Uses http method DELETE
+@app.route("/delete/<int:id>", methods=["DELETE"])
 def delete(id):
     pass
 
