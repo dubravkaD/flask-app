@@ -38,15 +38,16 @@
             url: `/delete/${id}`,
             data: JSON.stringify({ id: id }),
             success: function (data) {
-            //   console.log("Successful DELETE " + id);
-            //   console.log($(`#${id}`)[0])
-              $(`#${id}`)[0].remove()
+              //   console.log("Successful DELETE " + id);
+              //   console.log($(`#${id}`)[0])
+              $(`#${id}`)[0].remove();
             },
             error: function (error) {
               console.log(error);
             },
           });
         });
+        // edit
       });
     </script>
     <title>Recipe Book</title>
@@ -79,6 +80,8 @@
     </table>
 
     <br /><br />
+    <h3>Add Recipe</h3>
+    <br />
     <form id="form" action="/add" method="post">
       Title: <input type="text" name="title" id="title" /><br />
       Category: <input type="text" name="category" id="category" /><br />

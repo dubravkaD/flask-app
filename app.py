@@ -119,6 +119,9 @@ def get_recipe(id):
         cursor.close()
         return jsonify({"recipes": recipes})
 
+@app.route('/edit',methods=['GET'])
+def edit_recipe():
+    return render_template('edit_recipe.html')
 
 # Updates recipe from table recipes
 # Uses http method PUT
