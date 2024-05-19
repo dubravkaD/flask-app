@@ -5,6 +5,7 @@ app = Flask(__name__)
 
 # recipes = []
 
+
 # Creats table recipes if not exist in db
 # Has fields id, title, category, servings, ingredients, directions
 def create_table(connection):
@@ -30,14 +31,44 @@ def create_table(connection):
 @app.route("/", methods=["GET"])
 def index():
     recipes = get()
-    return render_template("index.html", recipes=[])
+    # get type of recipes
+    # print(type(recipes))
+    # if recipes is tuples -> recipes[0].json is list and each element in list is dict
+    recipes_res = recipes[0]
+    recipes_list = recipes_res.json
+    #
+    # print()
+    # [print(row) for row in recipes_list]
+    # print()
+    #
+    # if recipes is type flask.wrappers.Response
+    #
+    # recipes_json = recipes.json
+    # print(type(recipes_json))
+    # [print(row) for row in recipes_json]
+    return render_template("index.html", recipes=recipes_list)
 
 
 # Adds new recipe to table recipes
 # Uses http method POST
 @app.route("/add", methods=["POST"])
 def add():
-    pass
+    title = request.form["title"]
+    category = request.form["category"]
+    servings = request.form["servings"]
+    ingredients = request.form["ingredients"]
+    directions = request.form["directions"]
+    recipe = (title, category, int(servings), ingredients, directions)
+    with sqlite3.connect("recipe-book.db") as connection:
+        create_table(connection)
+        cursor = connection.cursor()
+        cursor.execute(
+            "INSERT INTO recipes (title,category,servings,ingredients,directions) VALUES(?,?,?,?,?)",
+            recipe,
+        )
+        connection.commit()
+        cursor.close()
+        return jsonify({"message": "Successfully added recipe!"}), 201
 
 
 # Gets all recipes from table recipes
@@ -51,7 +82,28 @@ def get():
         cursor.execute(query)
         recipes = cursor.fetchall()
         cursor.close()
-        return jsonify({"recipes": recipes})
+        return (
+            jsonify(
+                [
+                    dict(
+                        zip(
+                            [
+                                "id",
+                                "title",
+                                "category",
+                                "servings",
+                                "ingredients",
+                                "directions",
+                            ],
+                            row,
+                        )
+                    )
+                    for row in recipes
+                ]
+            ),
+            200,
+        )
+        # return recipes
 
 
 # Gets recipe by id from table recipes
