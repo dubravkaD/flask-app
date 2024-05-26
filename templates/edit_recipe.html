@@ -4,20 +4,60 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("button").on("click", function () {
+          var id = $("#index").val();
+          var title = $("#title").val();
+          var category = $("#category").val();
+          var servings = $("#servings").val();
+          var ingredients = $("#ingredients").val();
+          var directions = $("#directions").val();
+          console.log(document.getElementById("selID").value);
+          $.ajax({
+            type: "PUT",
+            url: `/update/${id}`,
+            data: JSON.stringify({
+              title: title,
+              category: category,
+              servings: servings,
+              ingredients: ingredients,
+              directions: directions,
+            }),
+            // contentType: "aplicaton/json",
+            // accepts: "aplicaton/json",
+            success: function (res) {
+              console.log("Successful PUT");
+            },
+            error: function (error) {
+              console.log(
+                error.status + " " + error.statusText + " " + error.responseJSON
+              );
+            },
+          });
+        });
+      });
+    </script>
     <title>Edit Recipe</title>
   </head>
   <body>
+    <h2>Edit Recipe</h2>
+    Id:
+    <input type="number" name="index" id="index" min="0" /><br />
+    Id:
+    <section id="selId">
+      {% for id in ids %}
+      <option value="{{id}} ">{{id}}</option>
+      {% endfor %}
+    </section>
     <br />
-    <form id="form">
-      Title: <input type="text" name="title" id="title" /><br />
-      Category: <input type="text" name="category" id="category" /><br />
-      Servings:
-      <input type="number" min="1" name="servings" id="servings" /><br />
-      Ingredients:
-      <input type="text" name="ingredients" id="ingredients" /><br />
-      Directions: <input type="text" name="directions" id="directions" /><br />
-      <button type="submit" id="submit">Submit</button>
-      <button type="reset">Reset</button>
-    </form>
+    Title: <input type="text" name="title" id="title" /><br />
+    Category: <input type="text" name="category" id="category" /><br />
+    Servings:
+    <input type="number" min="1" name="servings" id="servings" /><br />
+    Ingredients:
+    <input type="text" name="ingredients" id="ingredients" /><br />
+    Directions: <input type="text" name="directions" id="directions" /><br />
+    <button id="submit" class="submit">Submit</button>
   </body>
 </html>

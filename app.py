@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, url_for
 import sqlite3
+import json
 
 app = Flask(__name__)
 
@@ -119,15 +120,46 @@ def get_recipe(id):
         cursor.close()
         return jsonify({"recipes": recipes})
 
-@app.route('/edit',methods=['GET'])
+
+# Returns edit_recipe page
+# Uses http method GET
+@app.route("/edit", methods=["GET"])
 def edit_recipe():
-    return render_template('edit_recipe.html')
+    ids = get_ids()
+    # return url_for('edit_recipe')
+    return render_template("edit_recipe.html", ids=ids)
+
 
 # Updates recipe from table recipes
 # Uses http method PUT
 @app.route("/update/<int:id>", methods=["PUT"])
 def update(id):
-    pass
+    data = request.get_data()
+    recipe = str(data)
+    recipe = recipe.replace("b", "")
+    recipe = recipe.replace("'", "")
+    recipe = json.loads(recipe)
+    print(recipe["title"])
+    return jsonify({"message": "hi"}), 200
+    # with sqlite3.connect("recipe-book.db") as conn:
+    #     create_table(conn)
+    #     cursor = conn.cursor()
+    #     # cursor.execute(
+    #     #         "UPDATE recipes SET title=?, category=?, servings=?, ingredients=?, directions=? WHERE id=?",
+    #     #         (
+    #     #             title,
+    #     #             category,
+    #     #             servings,
+    #     #             ingredients,
+    #     #             directions,
+    #     #             id,
+    #     #         ),
+    #     #     )
+    #     query = f"UPDATE recipes SET title='{recipe['title']}', category='{recipe['category']}', servings='{int(recipe['servings'])}', ingredients='{recipe['ingredients']}', directions='{recipe['directions']}' WHERE id={int(id)};"
+    #     cursor.execute(query)
+    #     conn.commit()
+    #     cursor.close()
+    #     return jsonify({"message": "Recipe updated"}), 200
 
 
 # Deletes recipe by id from table recipes
@@ -143,6 +175,20 @@ def delete(id):
         if cursor.rowcount == 0:
             return jsonify({"message": "Recipe not found"}), 404
         return jsonify({"message": "Recipe deleted"}), 200
+
+
+# Gets all values for field id in db
+def get_ids():
+    with sqlite3.connect("recipe-book.db") as conn:
+        create_table(conn)
+        cursor = conn.cursor()
+        cursor.execute("SELECT id FROM recipes")
+        rows = cursor.fetchall()
+        cursor.close()
+        newRows=[]
+        [newRows.append(int(row[0])) for row in rows]
+        print(type(newRows))
+        return newRows
 
 
 if __name__ == "__main__":

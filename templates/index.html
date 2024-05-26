@@ -8,7 +8,7 @@
       $(document).ready(function () {
         // $("form").on("submit", function () {
         //   event.preventDefault();
-        //   var name = $("#name").val();
+        //   var title = $("#title").val();
         //   var category = $("#category").val();
         //   var servings = $("#servings").val();
         //   var ingredients = $("#ingredients").val();
@@ -31,6 +31,8 @@
         //     },
         //   });
         // });
+
+        // delete
         $(".delete").on("click", function () {
           var id = $(this).attr("id");
           $.ajax({
@@ -41,13 +43,28 @@
               //   console.log("Successful DELETE " + id);
               //   console.log($(`#${id}`)[0])
               $(`#${id}`)[0].remove();
+              console.log(data.JSON);
             },
             error: function (error) {
               console.log(error);
             },
           });
         });
+
         // edit
+        $(".edit").on("click", function () {
+          $.ajax({
+            type: "GET",
+            url: `/edit`,
+            success: function (data) {
+              console.log(data);
+              window.location.href = `http://127.0.0.1:5000/edit`;
+            },
+            error: function (error) {
+              console.log(error);
+            },
+          });
+        });
       });
     </script>
     <title>Recipe Book</title>
