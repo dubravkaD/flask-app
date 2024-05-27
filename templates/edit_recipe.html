@@ -6,14 +6,22 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
       $(document).ready(function () {
+
+        const minValue={{min|tojson}};
+        const maxValue={{ max|tojson }};
+
+        // console.log(typeof(minValue)+" "+maxValue)
         $("button").on("click", function () {
           var id = $("#index").val();
+          if(parseInt(id)<minValue || parseInt(id)>maxValue){
+            console.log("not right value "+minValue+" "+maxValue);
+            return
+          }
           var title = $("#title").val();
           var category = $("#category").val();
           var servings = $("#servings").val();
           var ingredients = $("#ingredients").val();
           var directions = $("#directions").val();
-          console.log(document.getElementById("selID").value);
           $.ajax({
             type: "PUT",
             url: `/update/${id}`,
@@ -43,13 +51,19 @@
   <body>
     <h2>Edit Recipe</h2>
     Id:
-    <input type="number" name="index" id="index" min="0" /><br />
-    Id:
+    <input
+      type="number"
+      name="index"
+      id="index"
+      min="{{min}}"
+      max="{{max}}"
+    /><br />
+    <!-- Id:
     <section id="selId">
       {% for id in ids %}
       <option value="{{id}} ">{{id}}</option>
       {% endfor %}
-    </section>
+    </section> -->
     <br />
     Title: <input type="text" name="title" id="title" /><br />
     Category: <input type="text" name="category" id="category" /><br />

@@ -126,8 +126,9 @@ def get_recipe(id):
 @app.route("/edit", methods=["GET"])
 def edit_recipe():
     ids = get_ids()
+    # print(min(ids),max(ids))
     # return url_for('edit_recipe')
-    return render_template("edit_recipe.html", ids=ids)
+    return render_template("edit_recipe.html",min=min(ids),max=max(ids))
 
 
 # Updates recipe from table recipes
@@ -139,27 +140,27 @@ def update(id):
     recipe = recipe.replace("b", "")
     recipe = recipe.replace("'", "")
     recipe = json.loads(recipe)
-    print(recipe["title"])
-    return jsonify({"message": "hi"}), 200
-    # with sqlite3.connect("recipe-book.db") as conn:
-    #     create_table(conn)
-    #     cursor = conn.cursor()
-    #     # cursor.execute(
-    #     #         "UPDATE recipes SET title=?, category=?, servings=?, ingredients=?, directions=? WHERE id=?",
-    #     #         (
-    #     #             title,
-    #     #             category,
-    #     #             servings,
-    #     #             ingredients,
-    #     #             directions,
-    #     #             id,
-    #     #         ),
-    #     #     )
-    #     query = f"UPDATE recipes SET title='{recipe['title']}', category='{recipe['category']}', servings='{int(recipe['servings'])}', ingredients='{recipe['ingredients']}', directions='{recipe['directions']}' WHERE id={int(id)};"
-    #     cursor.execute(query)
-    #     conn.commit()
-    #     cursor.close()
-    #     return jsonify({"message": "Recipe updated"}), 200
+    print(recipe)
+    # return jsonify({"message": "hi"}), 200
+    with sqlite3.connect("recipe-book.db") as conn:
+        create_table(conn)
+        cursor = conn.cursor()
+        # cursor.execute(
+        #         "UPDATE recipes SET title=?, category=?, servings=?, ingredients=?, directions=? WHERE id=?",
+        #         (
+        #             title,
+        #             category,
+        #             servings,
+        #             ingredients,
+        #             directions,
+        #             id,
+        #         ),
+        #     )
+        query = f"UPDATE recipes SET title='{recipe['title']}', category='{recipe['category']}', servings='{int(recipe['servings'])}', ingredients='{recipe['ingredients']}', directions='{recipe['directions']}' WHERE id={int(id)};"
+        cursor.execute(query)
+        conn.commit()
+        cursor.close()
+        return jsonify({"message": "Recipe updated"}), 200
 
 
 # Deletes recipe by id from table recipes
