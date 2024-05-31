@@ -1,6 +1,6 @@
 # Recipe Book
 
-Recipe Book is an application built with Python Flask, SQLite, jQuery, and Ajax.
+Recipe Book is an application built with Python Flask, SQLite, jQuery and Ajax.
 
 ## About the Project
 
