@@ -15,7 +15,7 @@ Recipe Book is an app designed to help users manage their collection of recipes,
 - **Home**: Main page where all recipes and form for adding recipes are displayed (`http://localhost:5000`)
 - **Add**: Route that is using the POST method and form to add recipe to the database (`http://localhost:5000/add`)
 - **Delete**: Used by button in table with recipes on the home page, deletes recipe from the database with the DELETE method (example for recipe with id 1: `http://localhost:5000/delete/1`)
-- **Edit**: Second page with fields for data to update accessed through button table from the home page, all fields need to be filled (`http://localhost:5000/edit`)
+- **Edit**: Second page with fields for data to update accessed through button in table from the home page, all fields need to be filled (`http://localhost:5000/edit`)
 - **Update**: Route used by the edit page to update the database using the PUT method (example for recipe with id 1: `http://localhost:5000/update/1`)
 - **Get**: Route to get all recipes or singular recipe by id, used by home page to fill table (to get all: `http://localhost:5000/get` and example for recipe with id 1 `http://localhost:5000/get/1`)
 
