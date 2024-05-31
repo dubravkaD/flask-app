@@ -26,7 +26,7 @@ Recipe Book is an app designed to help users manage their collection of recipes,
 
 ## Installation
 
-For Windows:
+For **Windows**:
 
 1. Clone the repository:
 
