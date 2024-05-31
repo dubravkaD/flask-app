@@ -85,6 +85,7 @@ def get():
         cursor.close()
         return (
             jsonify(
+                
                 [
                     dict(
                         zip(
@@ -116,9 +117,11 @@ def get_recipe(id):
         cursor = conn.cursor()
         query = f"SELECT * FROM recipes WHERE id={int(id)};"
         cursor.execute(query)
-        recipes = cursor.fetchall()
+        recipe = cursor.fetchone()
         cursor.close()
-        return jsonify({"recipes": recipes})
+        if recipe is None:
+            return jsonify({"message": "Recipe not found"}), 404
+        return jsonify(dict(zip(["id","title","category","servings","ingredients","directions",],recipe,))),200
 
 
 # Returns edit_recipe page
@@ -128,20 +131,60 @@ def edit_recipe():
     ids = get_ids()
     # print(min(ids),max(ids))
     # return url_for('edit_recipe')
-    return render_template("edit_recipe.html",min=min(ids),max=max(ids))
+    return render_template("edit_recipe.html", min=min(ids), max=max(ids))
 
 
 # Updates recipe from table recipes
 # Uses http method PUT
 @app.route("/update/<int:id>", methods=["PUT"])
 def update(id):
-    data = request.get_data()
-    recipe = str(data)
-    recipe = recipe.replace("b", "")
-    recipe = recipe.replace("'", "")
-    recipe = json.loads(recipe)
-    print(recipe)
+    data = request.get_json(force=True) # class dict -> json
+    json_data=jsonify(data).json
+    # print(type(data))
+    # print(data)
+    # print(data['title'])
+    # print(type(json_data))
+    # print(json_data)
+    # print(json_data['id'])
+
+    recipe=json_data
+
+    # data_str=str(data,'utf-8')
+    # recipe_json=json.loads(data_str)
+    # json_data = json.dumps(data)
+    # print(data_str)
+    # print(type(recipe_json),recipe_json)
+    # print(type(json_data))
+    # print(json_data)
+
+    # recipe = json.loads(data)
+    # print(recipe)
+
+    # print(data.to_dict(flat=False))
+    # list = data.to_dict(flat=False)
+    # print(list)
+
+    # data = request.form
+    # print(type(data.getlist('title'))) # class list
+    # print(data.to_dict(flat=False))
+    # list = data.to_dict(flat=False)
+    # print(list)
+
+    # recipe = json.loads(data)
+    # print(recipe)
+
+    # data = request.get_data()  # class bytes
+    # print(type(data))
+    # recipe = str(data)
+    # recipe = recipe.replace("b", "")
+    # recipe = recipe.replace("'", "")
+    # print(recipe,type(recipe))
+    # recipe = json.loads(recipe)
+    # print(type(data), type(recipe))
+    # print(recipe)
+
     # return jsonify({"message": "hi"}), 200
+
     with sqlite3.connect("recipe-book.db") as conn:
         create_table(conn)
         cursor = conn.cursor()
@@ -186,9 +229,9 @@ def get_ids():
         cursor.execute("SELECT id FROM recipes")
         rows = cursor.fetchall()
         cursor.close()
-        newRows=[]
+        newRows = []
         [newRows.append(int(row[0])) for row in rows]
-        print(type(newRows))
+        # print(type(newRows)) # class list
         return newRows
 
 

@@ -22,17 +22,31 @@
           var servings = $("#servings").val();
           var ingredients = $("#ingredients").val();
           var directions = $("#directions").val();
+          var json_data = JSON.stringify({
+              
+              "title": title,
+              "category": category,
+              "servings": servings,
+              "ingredients": ingredients,
+              "directions": directions,
+            });
+
+          // console.log(typeof(json_data));
+
+          //PUT REQUEST
           $.ajax({
             type: "PUT",
             url: `/update/${id}`,
-            data: JSON.stringify({
-              title: title,
-              category: category,
-              servings: servings,
-              ingredients: ingredients,
-              directions: directions,
-            }),
-            // contentType: "aplicaton/json",
+            // data: JSON.stringify({
+            //   title: title,
+            //   category: category,
+            //   servings: servings,
+            //   ingredients: ingredients,
+            //   directions: directions,
+            // }),
+            data: json_data,
+            dataType: "json",
+            contentType: "aplicaton/json",
             // accepts: "aplicaton/json",
             success: function (res) {
               console.log("Successful PUT");
@@ -43,7 +57,11 @@
               );
             },
           });
+
+
         });
+
+
       });
     </script>
     <title>Edit Recipe</title>
